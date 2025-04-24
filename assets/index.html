@@ -6,8 +6,11 @@
     <meta name="viewport" content="width=device-width">
     <title>Kanban</title>
 
-    <link rel="stylesheet" href="/assets/app.css" />
+    <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/assets/logo.svg" type="image/svg+xml">
+
     <link rel="stylesheet" href="https://manav.ch/atomic.css">
+    <link rel="stylesheet" href="/assets/app.css" />
 </head>
 
 <body svg:xmlns="http://www.w3.org/2000/svg" style="display: contents;">
@@ -17,11 +20,11 @@
         <div class="f j-bw">
             <input type="text" autocomplete="off" name="todo_name" value="" placeholder="Name" />
 
-            <input type="text" autocomplete="off" name="todo_text" value="" placeholder="Description" />
+            <textarea autocomplete="off" name="todo_text" value="" placeholder="Description" rows="1"></textarea>
 
             <wc-datepicker>
                 <input type="text" autocomplete="off" name="todo_deadline" value="" placeholder="Deadline"
-                    style="margin: 0 10px 0 10px; padding: 15px 10px;" />
+                    style="padding: 15px 10px;" />
             </wc-datepicker>
 
             <select name="todo_type" id="todo_types" class="option-task"></select>
@@ -69,6 +72,9 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/15.0.7/marked.min.js"
+        integrity="sha512-rPuOZPx/WHMHNx2RoALKwiCDiDrCo4ekUctyTYKzBo8NGA79NcTW2gfrbcCL2RYL7RdjX2v9zR0fKyI4U4kPew=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="/assets/app.js"></script>
     <script src="/assets/datepick.js"></script>
 </body>

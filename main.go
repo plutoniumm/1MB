@@ -110,6 +110,7 @@ func loadKanban() {
 	}
 }
 
+// nohup go run *.go > server.log 2>&1 &
 func main() {
 	var webRoot, bindAddr string
 

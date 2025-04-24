@@ -174,7 +174,7 @@ var Task = function ( data, list, index ) {
     this.updateUI = function () {
         this.element.innerHTML = "";
         var span = document.createElement( "span" );
-        span.style.color = '#666699';
+        span.style.color = '#ccca';
         span.className = 'task-user';
         span.innerHTML = this.name;
         span.ondblclick = function ( e ) {
@@ -189,7 +189,7 @@ var Task = function ( data, list, index ) {
         };
         this.element.appendChild( span );
         span = document.createElement( "span" );
-        span.style.color = this.type.color;
+        span.style.setProperty( '--col', this.type.color );
         span.className = 'task-type';
         span.innerHTML = '&nbsp;' + this.type.name;
         span.ondblclick = function ( e ) {
@@ -202,7 +202,23 @@ var Task = function ( data, list, index ) {
             span = document.createElement( "span" );
             span.style.color = '#aaa';
             span.className = 'task-deadline';
-            span.innerHTML = decodeURIComponent( this.deadline );
+            let DL = decodeURIComponent( this.deadline );
+            try {
+                DL = +new Date( DL.split( "-" ).reverse().join( "-" ) );
+                DL = ( DL - +new Date() ) / 864e5 | 0;
+
+                if ( DL > 365 ) DL = Math.floor( DL / 365 ) + 'Y';
+                else if ( DL > 30 ) DL = Math.floor( DL / 30 ) + 'M';
+                else if ( DL > 7 ) DL = Math.floor( DL / 7 ) + 'W';
+                else if ( DL > 1 ) DL = DL + 'D';
+                else if ( DL == 1 ) DL = 'Tomorrow';
+                else if ( DL == 0 ) DL = 'Today';
+                else DL = Math.abs( DL ) + 'D overdue';
+                span.innerHTML = DL;
+            } catch ( e ) {
+                DL = decodeURIComponent( this.deadline );
+            }
+            span.innerHTML = DL;
             span.ondblclick = function ( e ) {
                 e.preventDefault();
                 UI.modalShow( e.target.parentNode.self );
@@ -211,7 +227,11 @@ var Task = function ( data, list, index ) {
         }
         this.element.appendChild( document.createElement( "br" ) );
         span = document.createElement( "span" );
-        span.innerHTML = decodeURIComponent( this.description );
+        try {
+            span.innerHTML = marked.parse( decodeURIComponent( this.description ) );
+        } catch ( e ) {
+            span.innerHTML = decodeURIComponent( this.description );
+        }
         span.ondblclick = function ( e ) {
             e.preventDefault();
             UI.modalShow( e.target.parentNode.self );

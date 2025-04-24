@@ -50,24 +50,28 @@ svg {
 }
 
 .list:nth-of-type(1) {
+    --theme: #e9f;
     background: linear-gradient(to bottom, #e9f6, #c6f6);
-    border: 1px solid #e9f8;
+    border: 1px solid rgba(var(--theme), 0.5);
 }
 
 
 .list:nth-of-type(2) {
+    --theme: #4af;
     background: linear-gradient(to bottom, #4af6, #04e6);
-    border: 1px solid #4af8;
+    border: 1px solid rgba(var(--theme), 0.5);
 }
 
 .list:nth-of-type(3) {
+    --theme: #3e6;
     background: linear-gradient(to bottom, #3e66, #2a46);
-    border: 1px solid #3e68;
+    border: 1px solid rgba(var(--theme), 0.5);
 }
 
 .list:nth-of-type(4) {
+    --theme: #fd2;
     background: linear-gradient(to bottom, #fd26, #b506);
-    border: 1px solid #fd28;
+    border: 1px solid rgba(var(--theme), 0.5);
 }
 
 .list::before {
@@ -84,6 +88,7 @@ svg {
 }
 
 .card {
+    position: relative;
     font-size: 16px;
     border-radius: 10px;
     background: #222;
@@ -96,7 +101,8 @@ svg {
 }
 
 .card:hover {
-    opacity: 0.66;
+    cursor: move;
+    opacity: 0.9;
 }
 
 .card.dragging {
@@ -143,14 +149,6 @@ svg {
     opacity: 1;
 }
 
-.form-add-todo input,
-.form-add-list input {
-    margin-left: 10px;
-    background: #2c2c2c;
-    border: 1px solid #555;
-    color: #fff;
-}
-
 .form-add-list {
     position: fixed;
     bottom: 0;
@@ -163,13 +161,18 @@ select {
 }
 
 select,
+textarea,
+.button-app,
 input[type=text] {
     border: 1px solid #555;
-    background: #2c2c2c;
+    background: #222;
     color: #fff;
     padding: 5px 10px;
     border-radius: 10px;
-    font-size: 16px;
+    line-height: 1.2 !important;
+    font-family: sans-serif !important;
+    font-size: 16px !important;
+    margin-left: 10px !important;
 }
 
 .bin {
@@ -178,24 +181,45 @@ input[type=text] {
     float: right;
 }
 
-.task-type {
+.task-user {
     font-weight: bold;
-    font-size: 10px;
+    position: relative;
+}
+
+.task-type {
+    text-transform: uppercase;
+    pointer-events: none;
+    border-radius: 20px;
     float: right;
+    transition: all 0.1s ease;
+
+    background: var(--col);
+    font-size: 10px;
+    padding: 2px 7px;
+    height: 0;
+    color: #fff0;
+}
+
+.card:hover .task-type,
+.card:focus .task-type {
+    height: 20px;
+    color: #fff;
 }
 
 .task-deadline {
     font-size: 10px;
-    float: left;
-    font-weight: bold;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
 }
 
-.button-app {
-    padding: 5px 10px;
-    border-radius: 4px;
-    border: 1px solid #555;
-    font-size: 13px;
-    background: #2c2c2c;
+.card span p {
+    margin: 0;
+}
+
+.card span a {
+    text-decoration: underline;
+    color: var(--theme);
 }
 
 .bin:hover,
@@ -265,7 +289,7 @@ input[type=text] {
 }
 
 .modal-dialog-title {
-    color: #66cccc;
+    color: #aaa;
     font-size: 14px;
     font-weight: bold;
 }
