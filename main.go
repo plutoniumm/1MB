@@ -125,7 +125,7 @@ func main() {
 			Types: []Option{
 				Option{Color: "#4af", Name: "Work"},
 				Option{Color: "#294", Name: "Code"},
-				Option{Color: "#d30", Name: "Family"},
+				Option{Color: "#f0f", Name: "F&F"},
 				Option{Color: "#fb4", Name: "Idea"},
 				Option{Color: "#ccd", Name: "Acad"},
 				Option{Color: "#c6f", Name: "Q/ML"},
