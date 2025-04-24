@@ -14,7 +14,6 @@ import (
 
 var (
 	jsonFile string
-	readOnly bool
 	kanban   KanbanData
 )
 
@@ -23,7 +22,6 @@ func loadAsset(file string) ([]byte, error) {
 		file = "/assets/index.html"
 	}
 
-	// if /assets/
 	if strings.HasPrefix(file, "/assets/") {
 		content, err := os.ReadFile("." + file)
 		if err != nil {
@@ -36,10 +34,6 @@ func loadAsset(file string) ([]byte, error) {
 }
 
 func postKanban(c *gin.Context) {
-	if readOnly {
-		c.JSON(http.StatusOK, &kanban)
-		return
-	}
 	var data KanbanData
 	err := c.BindJSON(&data)
 	if err != nil {
@@ -97,19 +91,15 @@ func loadKanban() {
 }
 
 func main() {
-	var debug, init bool
 	var webRoot, bindAddr string
 
 	flag.StringVar(&webRoot, "web-root", "/", "sets the web root to use for the web API & UI")
 	flag.StringVar(&bindAddr, "bind", "127.0.0.1:8080", "sets the bind address and port (format 'address:port')")
 	flag.StringVar(&jsonFile, "json", "kanban.json", "sets the path of the json file to use")
-	flag.BoolVar(&init, "init", false, "create an example json config")
-	flag.BoolVar(&readOnly, "read-only", false, "runs in read-only mode")
-	flag.BoolVar(&debug, "debug", false, "runs in debug mode")
 
 	flag.Parse()
 
-	if init {
+	if _, err := os.Stat(jsonFile); errors.Is(err, os.ErrNotExist) {
 		kanban = KanbanData{
 			Types: []Option{
 				Option{Color: "#000099", Name: "Generic"},
@@ -123,17 +113,10 @@ func main() {
 				List{Name: "Waiting Feedback", Tasks: []Task{}},
 				List{Name: "Completed", Tasks: []Task{}},
 			},
-			Bin: []Task{},
 		}
 		saveKanban()
-		return
 	}
-
-	if _, err := os.Stat(jsonFile); errors.Is(err, os.ErrNotExist) {
-		panic("'" + jsonFile + "' does not exists.")
-	} else if !debug {
-		gin.SetMode(gin.ReleaseMode)
-	}
+	gin.SetMode(gin.ReleaseMode)
 
 	loadKanban()
 

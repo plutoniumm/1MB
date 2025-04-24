@@ -3,31 +3,22 @@ Array.prototype.move = function ( old_index, new_index ) {
         new_index = this.length - 1;
     }
     this.splice( new_index, 0, this.splice( old_index, 1 )[ 0 ] );
-    return this; // for testing purposes
+    return this;
 };
 Element.prototype.atIndex = function () {
-    if ( !this.parentNode ) {
-        return -1;
-    }
+    if ( !this.parentNode ) return -1;
+
     for ( var i = 0;i < this.parentNode.children.length;i++ ) {
-        if ( this.parentNode.children[ i ] == this ) {
-            return i;
-        }
-    }
+        if ( this.parentNode.children[ i ] == this ) return i;
+    };
+
     return -1;
 };
 
-function now () {
-    return ( new Date() ).getTime();
-}
-
-function timeISO ( x ) {
-    return ( new Date( x ) ).toISOString();
-}
-
-function copy ( o ) {
-    return JSON.parse( JSON.stringify( o ) );
-}
+const $id = ( id ) => document.getElementById( id );
+const now = () => ( new Date() ).getTime();
+const timeISO = ( x ) => ( new Date( x ) ).toISOString();
+const copy = ( o ) => JSON.parse( JSON.stringify( o ) );
 
 function live ( eventType, selector, callback ) {
     document.addEventListener( eventType, function ( e ) {
@@ -38,44 +29,39 @@ function live ( eventType, selector, callback ) {
 };
 
 var ModalDialog = function ( title, body, extra, ok_callback, ok_data, cancel_callback, cancel_data ) {
-    document.getElementById( 'modal-dialog-title-id' ).innerHTML = title;
-    document.getElementById( 'modal-dialog-body-id' ).innerHTML = body;
-    document.getElementById( 'modal-dialog-extra-id' ).innerHTML = '';
+    $id( 'modal-dialog-title-id' ).innerHTML = title;
+    $id( 'modal-dialog-body-id' ).innerHTML = body;
+    $id( 'modal-dialog-extra-id' ).innerHTML = '';
     if ( extra ) {
-        document.getElementById( 'modal-dialog-extra-id' ).appendChild( extra );
+        $id( 'modal-dialog-extra-id' ).appendChild( extra );
     }
     ModalDialog.ok_data = ok_data;
     ModalDialog.ok_callback = ok_callback;
     ModalDialog.cancel_data = cancel_data;
     ModalDialog.cancel_callback = cancel_callback;
     if ( !ok_callback ) {
-        document.getElementById( 'modal-dialog-ok-id' ).style.display = 'none';
+        $id( 'modal-dialog-ok-id' ).style.display = 'none';
     } else if ( !cancel_callback ) {
-        document.getElementById( 'modal-dialog-cancel-id' ).style.display = 'none';
-        document.getElementById( 'modal-dialog-ok-id' ).style.display = 'inline-block';
+        $id( 'modal-dialog-cancel-id' ).style.display = 'none';
+        $id( 'modal-dialog-ok-id' ).style.display = 'inline-block';
     } else {
-        document.getElementById( 'modal-dialog-cancel-id' ).style.display = 'inline-block';
-        document.getElementById( 'modal-dialog-ok-id' ).style.display = 'inline-block';
+        $id( 'modal-dialog-cancel-id' ).style.display = 'inline-block';
+        $id( 'modal-dialog-ok-id' ).style.display = 'inline-block';
     }
     ModalDialog.show();
 };
 
-ModalDialog.show = function () {
-    document.getElementById( 'modal-dialog' ).style.display = 'block';
-};
+ModalDialog.show = () => $id( 'modal-dialog' ).style.display = 'block';
+ModalDialog.hide = () => $id( 'modal-dialog' ).style.display = 'none';
 
-ModalDialog.hide = function () {
-    document.getElementById( 'modal-dialog' ).style.display = 'none';
-};
-
-document.getElementById( 'modal-dialog-ok-id' ).onclick = function () {
+$id( 'modal-dialog-ok-id' ).onclick = function () {
     if ( typeof ModalDialog.ok_callback == 'function' ) {
         ModalDialog.ok_callback( ModalDialog.ok_data );
-    }
+    };
     ModalDialog.hide();
 };
 
-document.getElementById( 'modal-dialog-cancel-id' ).onclick = function () {
+$id( 'modal-dialog-cancel-id' ).onclick = function () {
     if ( typeof ModalDialog.cancel_callback == 'function' ) {
         ModalDialog.cancel_callback( ModalDialog.cancel_data );
     }
@@ -99,10 +85,10 @@ ModalDialog.Option = function ( title, body, optionlist, adapter, ok_callback ) 
             option.value = optionlist[ i ];
         }
         selector.appendChild( option );
-    }
+    };
     ModalDialog.Option.ok_callback = ok_callback;
     ModalDialog( title, body, selector, function () {
-        var selector = document.getElementById( 'modal-dialog-selector' );
+        var selector = $id( 'modal-dialog-selector' );
         if ( ModalDialog.Option.ok_callback ) {
             ModalDialog.Option.ok_callback( selector.value );
         } else {
@@ -119,7 +105,7 @@ ModalDialog.Input = function ( title, body, placeholder, ok_callback ) {
     input.placeholder = placeholder ? placeholder : '';
     ModalDialog.Input.ok_callback = ok_callback;
     ModalDialog( title, body, input, function () {
-        var input = document.getElementById( 'modal-dialog-input' );
+        var input = $id( 'modal-dialog-input' );
         if ( ModalDialog.Input.ok_callback ) {
             ModalDialog.Input.ok_callback( input.value );
         } else {
@@ -166,10 +152,6 @@ var Task = function ( data, list, index ) {
     this.description = data.description;
     this.creationTime = data.creation ? data.creation : now();
     this.removedTime = data.removed ? data.removed : 0;
-    this.comments = [];
-    for ( var i = 0;data.comments && i < data.comments.length;i++ ) {
-        this.comments.push( data.comments[ i ] );
-    }
     this.list = list;
     this.element = document.createElement( "div" );
     this.element.draggable = true;
@@ -180,19 +162,15 @@ var Task = function ( data, list, index ) {
         e.preventDefault();
         UI.modalShow( e.target.self );
     };
-    this.is_name = function ( name ) {
-        return name == this.name;
-    };
+    this.is_name = ( name ) => ( name == this.name );
     this.moveToList = function ( list ) {
         this.list.remove( this );
         list.add( this );
     };
-    this.moveAtTask = function ( task ) {
-        this.list.moveAt( this, task );
-    };
-    this.moveAtEnd = function ( task ) {
-        this.list.moveAt( this );
-    };
+
+    this.moveAtTask = ( task ) => this.list.moveAt( this, task );
+    this.moveAtEnd = ( task ) => this.list.moveAt( this );
+
     this.updateUI = function () {
         this.element.innerHTML = "";
         var span = document.createElement( "span" );
@@ -240,23 +218,8 @@ var Task = function ( data, list, index ) {
         };
         this.element.appendChild( span );
     };
-    this.show = function () {
-        this.element.style.display = 'block';
-    };
-    this.hide = function () {
-        this.element.style.display = 'none';
-    };
-    this.addComment = function ( comment ) {
-        this.comments.push( {
-            time: now(),
-            comment: comment
-        } );
-    };
-    this.removeComment = function ( index ) {
-        if ( index > -1 && index < this.comments.length ) {
-            this.comments.splice( index, 1 );
-        }
-    };
+    this.show = () => this.element.style.display = 'block';
+    this.hide = () => this.element.style.display = 'none';
     this.json = function () {
         return {
             type: this.type.name,
@@ -265,7 +228,6 @@ var Task = function ( data, list, index ) {
             description: this.description,
             creation: this.creationTime,
             removed: this.removedTime,
-            comments: copy( this.comments )
         };
     };
 };
@@ -291,18 +253,6 @@ var List = function ( name, index, tasks ) {
             }
         }
     };
-    this.filter = function ( name ) {
-        for ( var i = 0;i < this.tasks.length;i++ ) {
-            if ( !name ) {
-                this.tasks[ i ].show();
-                continue;
-            } else if ( this.tasks[ i ].is_name( name ) ) {
-                this.tasks[ i ].show();
-            } else {
-                this.tasks[ i ].hide();
-            }
-        }
-    }
     this.updateUI = function () {
         this.element.innerHTML = '';
         this.heading.innerHTML = this.name;
@@ -337,9 +287,7 @@ var List = function ( name, index, tasks ) {
         }
         return null;
     };
-    this.size = function () {
-        return this.tasks.length;
-    };
+    this.size = () => this.tasks.length;
     this.json = function () {
         var j = {};
         j.name = this.name;
@@ -377,19 +325,13 @@ var Kanban = function () {
     this.placeholder = new Placeholder();
     this.lists = [];
     this.types = [];
-    this.bin = [];
-    this.board = document.getElementById( 'board' );
-    this.adder = document.getElementById( 'frmAddTodo' );
-    this.selectorTypes = document.getElementById( 'todo_types' );
-    this.modalDiv = document.getElementById( 'modal-id' );
-    this.filtersSpace = document.getElementById( 'filters-id' );
-    this.choosedFilter = null;
+    this.board = $id( 'board' );
+    this.adder = $id( 'frmAddTodo' );
+    this.selectorTypes = $id( 'todo_types' );
+    this.modalDiv = $id( 'modal-id' );
     this.adder.onsubmit = function ( e ) {
         e.preventDefault();
         var description = encodeURIComponent( this.todo_text.value.trim() );
-        console.log( this );
-        console.log( this.todo_name, this.todo_type );
-
         var name = this.todo_name.value.trim();
         var type = this.todo_type.value.trim();
         var deadline = encodeURIComponent( this.todo_deadline.value.trim() );
@@ -428,11 +370,9 @@ var Kanban = function () {
     this.trashTask = function ( task ) {
         task.removedTime = now();
         task.list.remove( task );
-        this.bin.push( task );
     };
     this.update = function ( data ) {
         this.lists = [];
-        this.bin = [];
         this.types = [];
         List.index = 0;
         for ( var i = 0;i < data.types.length;i++ ) {
@@ -441,10 +381,6 @@ var Kanban = function () {
         for ( var i = 0;i < data.lists.length;i++ ) {
             var p = data.lists[ i ];
             this.lists.push( new List( p.name, i, p.tasks ) );
-        }
-        for ( var i = 0;i < data.bin.length;i++ ) {
-            this.bin.push( new Task( data.bin[ i ], null, List.index ) );
-            List.index++;
         }
         this.network = false;
     };
@@ -470,36 +406,16 @@ var Kanban = function () {
             option.value = this.types[ i ].name;
             this.selectorTypes.appendChild( option );
         }
-        this.adder.style.display = "block";
-        this.filtersSpace.innerHTML = '';
-        var span = document.createElement( 'span' );
-        span.innerHTML = 'Filters: ';
-        span.style.float = 'left';
-        span.style.fontSize = '18px';
-        this.filtersSpace.appendChild( span );
-        var div = document.createElement( 'div' );
-        div.className = this.choosedFilter == null ? 'filter-name-selected' : 'filter-name-deselected';
-        div.onclick = function () {
-            UI.filter( null, this );
-        };
-        div.innerHTML = 'Show All';
-        this.filtersSpace.appendChild( div );
-        this.filter( this.choosedFilter );
+        this.adder.style.display = "block";;
     };
-    this.poll = function () {
-        server_req( JSON.stringify( this.json() ) );
-    };
+    this.poll = () => server_req( JSON.stringify( this.json() ) );
     this.json = function () {
         var d = {
             lists: new Array( this.lists.length ),
-            bin: new Array( this.bin.length ),
             types: new Array( this.types.length ),
         };
         for ( var i = 0;i < this.lists.length;i++ ) {
             d.lists[ i ] = this.lists[ i ].json();
-        }
-        for ( var i = 0;i < this.bin.length;i++ ) {
-            d.bin[ i ] = this.bin[ i ].json();
         }
         for ( var i = 0;i < this.types.length;i++ ) {
             d.types[ i ] = this.types[ i ].json();
@@ -518,56 +434,26 @@ var Kanban = function () {
     };
     this.modalReload = function () {
         var task = this.modalDiv.task;
-        document.getElementById( 'modal-user-id' ).innerHTML = task.name;
-        document.getElementById( 'modal-type-id' ).innerHTML = task.type.name;
-        document.getElementById( 'modal-deadline-id' ).innerHTML = task.deadline ? decodeURIComponent( task.deadline ) : '---';
-        document.getElementById( 'modal-type-id' ).style.color = task.type.color;
-        document.getElementById( 'modal-body-id' ).value = decodeURIComponent( task.description );
-
-        document.getElementById( 'modal-comment-button-id' ).disabled = false;
-        document.getElementById( 'modal-comment-area-id' ).disabled = false;
-        document.getElementById( 'modal-body-id' ).disabled = false;
-        document.getElementById( 'modal-deadline-id' ).ondblclick = function () {
+        $id( 'modal-name-id' ).innerHTML = task.name;
+        $id( 'modal-type-id' ).innerHTML = task.type.name;
+        $id( 'modal-deadline-id' ).innerHTML = task.deadline ? decodeURIComponent( task.deadline ) : '---';
+        $id( 'modal-type-id' ).style.color = task.type.color;
+        $id( 'modal-body-id' ).value = decodeURIComponent( task.description );
+        $id( 'modal-body-id' ).disabled = false;
+        $id( 'modal-deadline-id' ).ondblclick = function () {
             ModalDialog.Input( "Edit Task Deadline", "Please enter the new deadline", decodeURIComponent( UI.modalDiv.task.deadline ), function ( newdeadline ) {
                 UI.modalEditDeadline( newdeadline.trim() );
             } );
         };
-        document.getElementById( 'modal-user-id' ).ondblclick = function () {
-            ModalDialog.Option( "Edit Task User", "Please choose a new User to assign the Task", UI.users, null, function ( newuser ) {
-                UI.modalEditName( newuser );
-            } );
+        $id( 'modal-type-id' ).ondblclick = function () {
+            ModalDialog.Option(
+                "Edit Task Type",
+                "Please choose a new type to assign the Task",
+                UI.types,
+                v => v.name,
+                ( newtype ) => UI.modalEditType( newtype )
+            );
         };
-        document.getElementById( 'modal-type-id' ).ondblclick = function () {
-            ModalDialog.Option( "Edit Task Type", "Please choose a new type to assign the Task", UI.types, function ( v ) {
-                return v.name;
-            }, function ( newtype ) {
-                UI.modalEditType( newtype );
-            } );
-        };
-
-        var modcom = document.getElementById( 'modal-comments-id' );
-        modcom.innerHTML = '';
-        for ( var i = task.comments.length - 1;i >= 0;i-- ) {
-            var div = document.createElement( 'div' );
-            var span = document.createElement( 'span' );
-            span.commentid = i;
-            span.innerHTML = '&times;&nbsp;&nbsp;&nbsp;';
-            span.className = 'modal-comment-cross';
-            span.onclick = function () {
-                UI.modalRemoveComment( this.commentid );
-            }
-            div.appendChild( span );
-            span = document.createElement( 'span' );
-            span.innerHTML = timeISO( task.comments[ i ].time ).replace( /[T]|\.[0-9]+Z/g, ' ' ) + '&nbsp;';
-            span.style.color = '#7f7f7f';
-            div.appendChild( span );
-            div.appendChild( document.createElement( 'br' ) );
-            var span = document.createElement( 'span' );
-            span.innerHTML = decodeURIComponent( task.comments[ i ].comment ).replace( /\n/g, '<br>' );
-            div.appendChild( span );
-            modcom.appendChild( div );
-            modcom.appendChild( document.createElement( 'br' ) );
-        }
     };
     this.modalEditDeadline = function ( x ) {
         this.modalUpdateDescription();
@@ -590,70 +476,26 @@ var Kanban = function () {
             this.modalReload();
         }
     };
-    this.modalAddComment = function ( x ) {
-        this.modalUpdateDescription();
-        if ( !this.network ) {
-            this.modalDiv.task.addComment( encodeURIComponent( x ) );
-            this.modalReload();
-        }
-    };
-    this.modalRemoveComment = function ( x ) {
-        this.modalUpdateDescription();
-        if ( !this.network ) {
-            this.modalDiv.task.removeComment( x );
-            this.modalReload();
-        }
-    };
     this.modalUpdateDescription = function () {
         if ( !this.network ) {
             var desc = decodeURIComponent( this.modalDiv.task.description );
-            var text = document.getElementById( 'modal-body-id' ).value.trim();
-            if ( text != desc && confirm( 'Do you want to keep the new task description?' ) ) {
-                this.modalDiv.task.description = encodeURIComponent( text );
-            }
+            var text = $id( 'modal-body-id' ).value.trim();
+            this.modalDiv.task.description = encodeURIComponent( text );
         }
     };
     this.modalHide = function () {
         this.modalUpdateDescription();
         this.modalDiv.style.display = 'none';
-        document.getElementById( 'modal-comments-id' ).innerHTML = '';
         this.modalDiv.task = null;
 
         this.poll();
-    };
-    this.filter = function ( name, element ) {
-        if ( name == '' ) {
-            name = null;
-        }
-        this.choosedFilter = name;
-        if ( element ) {
-            var children = this.filtersSpace.children;
-            for ( var i = 0;i < children.length;i++ ) {
-                if ( children[ i ].nodeName.toLowerCase() == 'div' ) {
-                    if ( children[ i ] != element ) {
-                        children[ i ].className = 'filter-name-deselected';
-                    }
-                }
-            }
-            element.className = 'filter-name-selected';
-        }
-        for ( var i = 0;i < this.lists.length;i++ ) {
-            this.lists[ i ].filter( name );
-        }
     };
 };
 
 var UI = new Kanban();
 
-window.addEventListener( "dragover", function ( e ) {
-    e = e || event;
-    e.preventDefault();
-}, false );
-
-window.addEventListener( "drop", function ( e ) {
-    e = e || event;
-    e.preventDefault();
-}, false );
+window.addEventListener( "dragover", function ( e ) { e.preventDefault() }, false );
+window.addEventListener( "drop", function ( e ) { e.preventDefault() }, false );
 
 live( 'dragstart', '.list .card', function ( e ) {
     UI.dragging = true;
@@ -688,7 +530,7 @@ live( 'drop', '.list, .list .card-placeholder', function ( e ) {
     e.preventDefault();
     if ( !UI.dragging || UI.network ) return false;
     var task_id = e.dataTransfer.getData( 'text' );
-    var task = document.getElementById( task_id );
+    var task = $id( task_id );
     if ( this.className === 'list' ) {
         this.appendChild( task );
     } else {
@@ -703,36 +545,24 @@ live( 'drop', '.bin', function ( e ) {
     e.preventDefault();
     if ( UI.network ) return false;
     var task_id = e.dataTransfer.getData( 'text' );
-    var task = document.getElementById( task_id );
+    var task = $id( task_id );
     UI.trashTask( task.self );
     UI.updateUI();
     UI.poll();
 } );
 
-function server_req ( body, disableWrite ) {
-    var xhr = new AJAX( body ? "POST" : "GET", "kanban", function ( data ) {
+function server_req ( body ) {
+    var xhr = new AJAX( body ? "POST" : "GET", "kanban", ( data ) => {
         UI.update( JSON.parse( data ) );
         UI.updateUI();
     }, body );
+
     UI.wait( true );
 }
 
-document.getElementById( 'modal-cross-id' ).onclick = () => UI.modalHide();
-
-document.getElementById( 'modal-comment-button-id' ).onclick = function () {
-    var area = document.getElementById( 'modal-comment-area-id' );
-    if ( area.value.trim() != '' ) {
-        UI.modalAddComment( area.value.trim() );
-        area.value = '';
-    }
-};
-
+$id( 'modal-cross-id' ).onclick = () => UI.modalHide();
 window.onclick = function ( event ) {
-    if ( event.target == UI.modalDiv ) {
-        UI.modalHide();
-    }
+    if ( event.target == UI.modalDiv ) UI.modalHide();
 };
 
-document.addEventListener( "DOMContentLoaded", function () {
-    server_req( null, true );
-} );
+document.addEventListener( "DOMContentLoaded", () => server_req( null ) );

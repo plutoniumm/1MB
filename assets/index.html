@@ -5,48 +5,47 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <title>Kanban</title>
+
     <link rel="stylesheet" href="/assets/app.css" />
+    <link rel="stylesheet" href="https://manav.ch/atomic.css">
 </head>
 
 <body svg:xmlns="http://www.w3.org/2000/svg" style="display: contents;">
-    <form id="frmAddTodo" class="form-add-todo">
+    <form id="frmAddTodo" class="form-add-todo p20">
         New Task:&nbsp;&nbsp;
         <input type="text" autocomplete="off" name="todo_name" value="" placeholder="Name" />
         <input type="text" autocomplete="off" name="todo_text" value="" placeholder="Description" />
         <input type="text" autocomplete="off" name="todo_deadline" value=""
             placeholder="Deadline" />&nbsp;&nbsp;&nbsp;&nbsp;
         <select name="todo_type" id="todo_types" class="option-task"></select>&nbsp;&nbsp;&nbsp;&nbsp;
-        <input type="submit" value="Add Task" class="button-app" />
-        <svg id="bin" class="bin" viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="currentcolor"
-            stroke-width="2">
-            <path d="M28 6 L6 6 8 30 24 30 26 6 4 6 M16 12 L16 24 M21 12 L20 24 M11 12 L12 24 M12 6 L13 2 19 2 20 6" />
+        <input type="submit" class="p5 rx5" value="Add Task" class="button-app" />
+
+        <svg id="bin" class="bin" viewBox="9 9 82 82">
+            <path fill="#e0e0e0"
+                d="M83 41a74 74 0 0 1 8 9c-1-9-6-17-14-22a34 34 0 0 0-3-2 74 74 0 0 1 12 4c-6-7-14-12-24-13a34 34 0 0 0-3 0 74 74 0 0 1 12-2c-9-4-18-4-27 0a33 33 0 0 0-3 2 74 74 0 0 1 9-8c-9 1-17 6-22 14a34 34 0 0 0-2 3 74 74 0 0 1 4-12c-7 6-12 14-13 24a34 34 0 0 0 0 3 74 74 0 0 1-2-12c-4 9-4 18 0 27a33 33 0 0 0 2 3 74 74 0 0 1-8-9c1 9 6 17 14 22a34 34 0 0 0 3 2 74 74 0 0 1-12-4 33 33 0 0 0 27 13 74 74 0 0 1-12 2c9 4 18 4 27 0a33 33 0 0 0 3-2 74 74 0 0 1-9 8c9-1 17-6 22-14a34 34 0 0 0 2-3 74 74 0 0 1-4 12 33 33 0 0 0 13-27 74 74 0 0 1 2 12c4-9 4-18 0-27a33 33 0 0 0-2-3z" />
+            <path fill="#666766"
+                d="M79 42a65 65 0 0 1 7 8c-1-8-5-15-12-20a29 29 0 0 0-3-1 65 65 0 0 1 10 3c-5-6-12-10-20-11a29 29 0 0 0-3 0 65 65 0 0 1 10-2 29 29 0 0 0-26 2 65 65 0 0 1 8-7c-8 1-15 5-20 12a29 29 0 0 0-1 3 65 65 0 0 1 3-10c-6 5-10 12-11 20a29 29 0 0 0 0 3 65 65 0 0 1-2-10 29 29 0 0 0 2 26 65 65 0 0 1-7-8c1 8 5 15 12 20a29 29 0 0 0 3 1 65 65 0 0 1-10-3 29 29 0 0 0 23 11 65 65 0 0 1-10 2c7 3 16 3 23-1a30 30 0 0 0 3-1 65 65 0 0 1-8 7c8-1 15-5 20-12a29 29 0 0 0 1-3 65 65 0 0 1-3 10 29 29 0 0 0 11-23 65 65 0 0 1 2 10c3-7 3-16-1-23a30 30 0 0 0-1-3z" />
+            <path fill="#333"
+                d="M75 43a56 56 0 0 1 6 7c-1-7-4-13-10-17a25 25 0 0 0-3-1 56 56 0 0 1 9 3c-4-6-10-9-18-10a25 25 0 0 0-2 0 56 56 0 0 1 9-2c-7-2-14-2-20 1a25 25 0 0 0-3 1 56 56 0 0 1 7-6c-7 1-13 4-17 10a25 25 0 0 0-1 3 56 56 0 0 1 3-9 25 25 0 0 0-10 20 56 56 0 0 1-2-9c-2 7-2 14 1 20a25 25 0 0 0 1 3 56 56 0 0 1-6-7c1 7 4 13 10 17a25 25 0 0 0 3 1 56 56 0 0 1-9-3 25 25 0 0 0 20 10 56 56 0 0 1-9 2c7 2 14 2 20-1a25 25 0 0 0 3-1 56 56 0 0 1-7 6c7-1 13-4 17-10a25 25 0 0 0 1-3 56 56 0 0 1-3 9 25 25 0 0 0 10-20 56 56 0 0 1 2 9c2-7 2-14-1-20a25 25 0 0 0-1-3z" />
+            <circle cx="50" cy="50" r="20" />
         </svg>
     </form>
 
-    <div class="board" id="board"></div>
+    <div class="board p20 f p-abs" id="board"></div>
 
-    <div class="filter-space" id="filters-id"></div>
-
-    <div id="modal-id" class="modal">
+    <div id="modal-id" class="modal p-fix">
         <div class="modal-content">
-            <span class="close-cross" id="modal-cross-id">&times;</span>
-            <span class="modal-content-type" id="modal-type-id">TYPE</span>&nbsp;
-            <span class="modal-content-deadline">Deadline: </span><span
-                class="modal-content-deadline modal-content-deadline" id="modal-deadline-id">DEADLINE</span><br>
-            <textarea class="modal-description" id="modal-body-id">DESCRIPTION</textarea>
-            <div id="modal-user-comment">
-                <textarea placeholder="Write here a comment.." class="modal-text-area"
-                    id="modal-comment-area-id"></textarea>
-                <input type="button" class="button-app" id="modal-comment-button-id" value="Add comment" />
-            </div>
-            <br>
-            <div class="modal-content-comments" id="modal-comments-id"></div>
+            <span class="modal-content-name" id="modal-name-id">Name</span>&nbsp;
+            <span class="close-cross fw7 p-rel ptr" id="modal-cross-id">&times;</span>
+            <span class="modal-content-type fw7" id="modal-type-id">TYPE</span>&nbsp;
+            <span class="modal-content-deadline fw7">Deadline: </span>
+            <span class="modal-content-deadline fw7" id="modal-deadline-id">DEADLINE</span><br>
+            <textarea class="modal-desc rx5 p10 w-100" id="modal-body-id">DESCRIPTION</textarea>
         </div>
     </div>
 
     <div id="modal-dialog" class="modal">
-        <!-- Modal content -->
-        <div class="modal-dialog-content">
+        <div class="modal-dialog-content w-50 p20 rx5">
             <span class="modal-dialog-title" id="modal-dialog-title-id">TITLE</span><br>
             <div class="modal-dialog-body" id="modal-dialog-body-id">BODY</div>
             <br>
