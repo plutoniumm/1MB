@@ -114,7 +114,7 @@ func main() {
 	var webRoot, bindAddr string
 
 	flag.StringVar(&webRoot, "web-root", "/", "sets the web root to use for the web API & UI")
-	flag.StringVar(&bindAddr, "bind", "127.0.0.1:8080", "sets the bind address and port (format 'address:port')")
+	flag.StringVar(&bindAddr, "bind", "127.0.0.1"+ENV_PORT, "sets the bind address and port (format 'address:port')")
 	flag.StringVar(&jsonFile, "json", "kanban.json", "sets the path of the json file to use")
 
 	flag.Parse()
