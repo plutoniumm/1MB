@@ -1,6 +1,3 @@
-// SPDX-FileCopyrightText: 2022 deroad <wargio@libero.it>
-// SPDX-License-Identifier: LGPL-3.0-only
-
 package main
 
 import (
@@ -8,7 +5,6 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
@@ -24,18 +20,19 @@ var (
 
 func loadAsset(file string) ([]byte, error) {
 	if file == "/" {
-		file = "/index.html"
+		file = "/assets/index.html"
 	}
 
-	asset, err := Assets.Open(file)
-	if err != nil {
-		return nil, nil
+	// if /assets/
+	if strings.HasPrefix(file, "/assets/") {
+		content, err := os.ReadFile("." + file)
+		if err != nil {
+			return nil, fmt.Errorf("failed to read asset file: %w", err)
+		}
+		return content, nil
 	}
-	content, err := ioutil.ReadAll(asset)
-	if err != nil {
-		return nil, err
-	}
-	return content, nil
+
+	return nil, fmt.Errorf("file not found")
 }
 
 func postKanban(c *gin.Context) {
@@ -84,14 +81,14 @@ func handleGet(c *gin.Context) {
 
 func saveKanban() {
 	bytes, _ := json.Marshal(&kanban)
-	err := ioutil.WriteFile(jsonFile, bytes, 0600)
+	err := os.WriteFile(jsonFile, bytes, 0600)
 	if err != nil {
 		panic(err)
 	}
 }
 
 func loadKanban() {
-	content, err := ioutil.ReadFile(jsonFile)
+	content, err := os.ReadFile(jsonFile)
 	if err != nil {
 		panic(err)
 	} else if err = json.Unmarshal(content, &kanban); err != nil {
@@ -124,7 +121,6 @@ func main() {
 				Option{Color: "#996633", Name: "Tickets"},
 				Option{Color: "#ff0000", Name: "Critical"},
 			},
-			Users: []string{"user1", "user2"},
 			Lists: []List{
 				List{Name: "Todo", Tasks: []Task{}},
 				List{Name: "Low Priority", Tasks: []Task{}},
