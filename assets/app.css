@@ -12,6 +12,8 @@ body {
 svg {
     stroke-linecap: round;
     stroke-linejoin: round;
+    stroke: #fff !important;
+    stroke-width: 1;
 }
 
 * {
@@ -47,21 +49,25 @@ svg {
     z-index: 0;
 }
 
-.list:nth-of-type(1),
+.list:nth-of-type(1) {
+    background: linear-gradient(to bottom, #e9f6, #c6f6);
+    border: 1px solid #e9f8;
+}
+
+
 .list:nth-of-type(2) {
-    /* blue */
-    background: linear-gradient(to bottom, #46a6, #24d6)
+    background: linear-gradient(to bottom, #4af6, #04e6);
+    border: 1px solid #4af8;
 }
 
-.list:nth-of-type(3),
+.list:nth-of-type(3) {
+    background: linear-gradient(to bottom, #3e66, #2a46);
+    border: 1px solid #3e68;
+}
+
 .list:nth-of-type(4) {
-    /* green */
-    background: linear-gradient(to bottom, #4a66, #2d46)
-}
-
-.list:nth-of-type(5) {
-    /* yellow */
-    background: linear-gradient(to bottom, #feb6, #fa06)
+    background: linear-gradient(to bottom, #fd26, #b506);
+    border: 1px solid #fd28;
 }
 
 .list::before {
@@ -78,17 +84,19 @@ svg {
 }
 
 .card {
-    border-radius: 5px;
-    background: #2c2c2c;
+    font-size: 16px;
+    border-radius: 10px;
+    background: #222;
     border: 1px solid #444;
-    margin-bottom: 5px;
-    padding: 8px 10px;
-    transition: all 0.3s ease;
+    margin: 5px 0;
+    padding: 10px;
+    transition: all 0.1s ease;
     color: #fff;
+    text-transform: capitalize;
 }
 
 .card:hover {
-    opacity: 0.8;
+    opacity: 0.66;
 }
 
 .card.dragging {
@@ -100,18 +108,20 @@ svg {
     display: block;
     height: 52px;
     border: 1px dashed #555;
+    background: #2224;
     margin: 3px 0;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 
 .listname {
     margin: 0 0 10px;
-    font-size: 14px;
     text-transform: uppercase;
     padding: 5px;
-    border-bottom: 1px dashed #4448;
     text-overflow: ellipsis;
     user-select: none;
+    color: #fff;
+    mix-blend-mode: overlay;
+    opacity: 0.8;
 }
 
 .listname>span {
@@ -123,7 +133,14 @@ svg {
 .form-add-todo,
 .form-add-list {
     background: #111;
-    border-bottom: 1px solid #444;
+    border-bottom: 1px solid #4448;
+    opacity: 0.25;
+    transition: all 0.1s ease;
+}
+
+.form-add-todo:hover,
+.form-add-list:hover {
+    opacity: 1;
 }
 
 .form-add-todo input,
@@ -141,12 +158,17 @@ svg {
     left: 0;
 }
 
+select {
+    min-width: 20ch;
+}
+
+select,
 input[type=text] {
     border: 1px solid #555;
     background: #2c2c2c;
     color: #fff;
     padding: 5px 10px;
-    border-radius: 4px;
+    border-radius: 10px;
     font-size: 16px;
 }
 
@@ -184,7 +206,7 @@ input[type=text] {
 
 .option-task {
     padding: 5px 10px;
-    border-radius: 4px;
+    border-radius: 10px;
     border: 1px solid #555;
     font-size: 16px;
     background: #2c2c2c;

@@ -200,9 +200,9 @@ var Task = function ( data, list, index ) {
         if ( this.deadline ) {
             this.element.appendChild( document.createElement( "br" ) );
             span = document.createElement( "span" );
-            span.style.color = '#909090';
+            span.style.color = '#aaa';
             span.className = 'task-deadline';
-            span.innerHTML = 'Deadline: ' + decodeURIComponent( this.deadline );
+            span.innerHTML = decodeURIComponent( this.deadline );
             span.ondblclick = function ( e ) {
                 e.preventDefault();
                 UI.modalShow( e.target.parentNode.self );
@@ -243,7 +243,6 @@ var List = function ( name, index, tasks ) {
     this.element.className = "list";
     this.heading.className = "listname";
     this.update = function () {
-        // contains the header when empty
         this.tasks = [];
         for ( var i = 0;i < this.element.children.length;i++ ) {
             var t = this.element.children[ i ].self;

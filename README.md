@@ -1,14 +1,3 @@
-# Open Kanban
+# 1MB
 
-Original webui code author: https://github.com/scazzy/kanban-board
-
-## Screenshot
-
-![image](https://user-images.githubusercontent.com/561184/162066838-df45e389-07c4-49b8-831c-6520d0c79af8.png)
-
-## Building
-
-```bash
-go mod download
-go build
-```
+Kanban <1MB (1MB is a lot its almost trivial to keep it under.)

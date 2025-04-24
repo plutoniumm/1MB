@@ -65,12 +65,32 @@ func handleGet(c *gin.Context) {
 		contentType = "image/x-icon"
 	} else if strings.HasSuffix(file, ".css") {
 		contentType = "text/css"
+	} else if strings.HasSuffix(file, ".svg") {
+		contentType = "image/svg+xml"
+	} else if strings.HasSuffix(file, ".png") {
+		contentType = "image/png"
 	} else if strings.HasSuffix(file, ".js") {
 		contentType = "text/javascript"
 	} else {
 		contentType = http.DetectContentType(content)
 	}
 	c.Data(200, contentType, content)
+}
+
+func scamAuth() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		username, password, hasAuth := c.Request.BasicAuth()
+		if hasAuth && password != "" {
+			password = fmt.Sprintf("%x", password)
+		}
+
+		if !hasAuth || username != ENV_USER || password != ENV_PASS {
+			c.Header("WWW-Authenticate", `Basic realm="Restricted"`)
+			c.AbortWithStatusJSON(401, gin.H{"error": "Unauthorized"})
+			return
+		}
+		c.Next()
+	}
 }
 
 func saveKanban() {
@@ -102,16 +122,19 @@ func main() {
 	if _, err := os.Stat(jsonFile); errors.Is(err, os.ErrNotExist) {
 		kanban = KanbanData{
 			Types: []Option{
-				Option{Color: "#000099", Name: "Generic"},
-				Option{Color: "#996633", Name: "Tickets"},
-				Option{Color: "#ff0000", Name: "Critical"},
+				Option{Color: "#4af", Name: "Work"},
+				Option{Color: "#294", Name: "Code"},
+				Option{Color: "#d30", Name: "Family"},
+				Option{Color: "#fb4", Name: "Idea"},
+				Option{Color: "#ccd", Name: "Acad"},
+				Option{Color: "#c6f", Name: "Q/ML"},
+				Option{Color: "#888", Name: "Default"},
 			},
 			Lists: []List{
-				List{Name: "Todo", Tasks: []Task{}},
-				List{Name: "Low Priority", Tasks: []Task{}},
-				List{Name: "In Progress", Tasks: []Task{}},
-				List{Name: "Waiting Feedback", Tasks: []Task{}},
-				List{Name: "Completed", Tasks: []Task{}},
+				List{Name: "Euclidian", Tasks: []Task{}},
+				List{Name: "Al-Khwarizmic", Tasks: []Task{}},
+				List{Name: "Newtonian", Tasks: []Task{}},
+				List{Name: "Fourier", Tasks: []Task{}},
 			},
 		}
 		saveKanban()
@@ -122,6 +145,8 @@ func main() {
 
 	engine := gin.Default()
 	router := engine.Group(webRoot)
+	router.Use(scamAuth())
+
 	router.GET("/*file", handleGet)
 	router.POST("/kanban", postKanban)
 
