@@ -1,14 +1,5 @@
 # Open Kanban
 
-A simple kanban selfhosted.
-
-Feature list:
-
-* Tasks (with Users, Categories and Priorities)
-* Comments
-* Filters
-* No database support
-
 Original webui code author: https://github.com/scazzy/kanban-board
 
 ## Screenshot
@@ -20,12 +11,4 @@ Original webui code author: https://github.com/scazzy/kanban-board
 ```bash
 go mod download
 go build
-```
-
-## Updating the www files
-
-you will need to install [go-assets-builder](https://github.com/jessevdk/go-assets-builder)
-
-```bash
-go-assets-builder -s /www -o assets.go www
 ```

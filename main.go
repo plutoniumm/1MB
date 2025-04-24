@@ -111,11 +111,6 @@ func main() {
 
 	if init {
 		kanban = KanbanData{
-			Priorities: []Option{
-				Option{Color: "#000099", Name: "High"},
-				Option{Color: "#996633", Name: "Medium"},
-				Option{Color: "#ff0000", Name: "Low"},
-			},
 			Types: []Option{
 				Option{Color: "#000099", Name: "Generic"},
 				Option{Color: "#996633", Name: "Tickets"},

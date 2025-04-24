@@ -1,12 +1,10 @@
 body {
+    background-color: #222;
     font-family: sans-serif;
     font-size: 14px;
-    background-color: #008c9e;
     color: #fff;
     margin: 0
 }
-
-.app-wrapper {}
 
 * {
     box-sizing: border-box;
@@ -88,27 +86,6 @@ body {
     font-size: 13px;
 }
 
-.header {
-    padding: 20px;
-    height: 78px;
-    position: relative;
-    background-color: #343838;
-}
-
-.logo {
-    margin: 0;
-    display: inline-block;
-}
-
-.logo small {
-    font-size: 9px;
-    font-weight: normal;
-    color: rgba(255, 255, 255, 0.5);
-    display: block;
-    text-align: right;
-    letter-spacing: 1px;
-}
-
 .form-add-todo,
 .form-add-list {
     padding: 10px 20px;
@@ -134,17 +111,6 @@ input[type=text] {
     font-size: 13px;
 }
 
-.total-card-counter {
-    display: inline-block;
-    margin: 0;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    position: absolute;
-    right: 0;
-    bottom: 15px;
-}
-
 .bin {
     width: 32px;
     height: 34px;
@@ -156,12 +122,6 @@ input[type=text] {
 }
 
 .task-type {
-    font-size: 10px;
-    float: right;
-    font-weight: bold;
-}
-
-.task-prio {
     font-size: 10px;
     float: right;
     font-weight: bold;
@@ -242,28 +202,17 @@ input[type=text] {
     top: -12px;
 }
 
-/* The Modal (background) */
 .modal {
     display: none;
-    /* Hidden by default */
     position: fixed;
-    /* Stay in place */
     z-index: 1;
-    /* Sit on top */
     padding-top: 100px;
-    /* Location of the box */
     left: 0;
     top: 0;
     width: 100%;
-    /* Full width */
     height: 100%;
-    /* Full height */
     overflow: auto;
-    /* Enable scroll if needed */
-    background-color: rgb(0, 0, 0);
-    /* Fallback color */
-    background-color: rgba(0, 0, 0, 0.4);
-    /* Black w/ opacity */
+    background-color: #0007;
 }
 
 /* Modal Content */
@@ -299,11 +248,6 @@ input[type=text] {
 }
 
 .modal-content-type {
-    font-size: 14px;
-    font-weight: bold;
-}
-
-.modal-content-prio {
     font-size: 14px;
     font-weight: bold;
 }

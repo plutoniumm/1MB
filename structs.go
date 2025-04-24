@@ -1,6 +1,3 @@
-// SPDX-FileCopyrightText: 2022 deroad <wargio@libero.it>
-// SPDX-License-Identifier: LGPL-3.0-only
-
 package main
 
 type Comment struct {
@@ -13,7 +10,6 @@ type Task struct {
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
 	Type        string    `json:"type"`
-	Priority    string    `json:"priority"`
 	Deadline    string    `json:"deadline"`
 	Creation    uint64    `json:"creation"`
 	Removed     uint64    `json:"removed"`
@@ -30,9 +26,8 @@ type Option struct {
 }
 
 type KanbanData struct {
-	Priorities []Option `json:"priorities"`
-	Types      []Option `json:"types"`
-	Lists      []List   `json:"lists"`
-	Bin        []Task   `json:"bin"`
-	ReadOnly   bool     `json:"readOnly"`
+	Types    []Option `json:"types"`
+	Lists    []List   `json:"lists"`
+	Bin      []Task   `json:"bin"`
+	ReadOnly bool     `json:"readOnly"`
 }
