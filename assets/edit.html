@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Markdown Editor</title>
+
+  <link rel="stylesheet" href="/assets/editor.css">
+  <link rel="stylesheet" href="https://manav.ch/atomic.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/default.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.1/dist/katex.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lt-split@0.1.0/dist/lt-split.css">
+
+
+  <script async defer src="https://cdn.jsdelivr.net/gh/plutoniumm/light@dist/split.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.1/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/15.0.7/marked.min.js" crossorigin="anonymous"
+    referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked-katex-extension@5.1.4/lib/index.umd.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" crossorigin="anonymous"
+    referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked-highlight/lib/index.umd.js"></script>
+
+  <script>
+    marked.use( markedKatex() );
+    marked.use( markedHighlight.markedHighlight( {
+      highlight: function ( code, lang ) {
+        if ( lang === 'mmd' || lang === 'mermaid' ) {
+          const id = 'mmd-' + Math.random().toString( 36 ).substring( 2, 9 );
+          mermaid.initialize( { startOnLoad: false } );
+          mermaid.render( id, code, ( svgCode ) => {
+            const div = document.createElement( 'div' );
+            div.innerHTML = svgCode;
+            const target = document.getElementById( id );
+            if ( target ) target.replaceWith( div );
+          } );
+          return `<div id="${ id }">Rendering Mermaid...</div>`;
+        }
+
+        if ( typeof lang === 'undefined' ) {
+          return hljs.highlightAuto( code ).value;
+        } else if ( lang === 'txt' ) {
+          return code;
+        } else {
+          if ( !hljs.getLanguage( lang ) ) {
+            const script = document.createElement( 'script' );
+            script.src = `https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/lib/languages/${ lang }.min.js`;
+            script.onload = () => hljs.registerLanguage( lang, window.hljs[ lang ] );
+            document.head.appendChild( script );
+          }
+          return hljs.highlight( code, { language: lang } ).value;
+        }
+      }
+    } ) );
+
+    document.addEventListener( 'DOMContentLoaded', () => {
+      let path = window.location.pathname;
+      path = path.replace( '/edit/', '/edit/raw/' );
+      fetch( path ).then( r => r.text() )
+        .then( ( data ) => {
+          console.log( 'data', data );
+
+          editor.value = data;
+          preview.innerHTML = marked.parse( editor.value );
+        } )
+        .catch( ( error ) => {
+          console.error( 'There has been a problem with your fetch operation:', error );
+        } );
+    } );
+  </script>
+</head>
+
+<body class="p-rel" svg:xmlns="http://www.w3.org/2000/svg">
+  <lt-split class="h-100">
+    <textarea slot="a" class="p20" id="editor" placeholder="Write Markdown here...">
+      the inside stuff of textarea here
+    </textarea>
+    <div slot="b" class="prev p20 flow-y-s" id="preview"></div>
+  </lt-split>
+
+  <div id="controls" class="p-abs rx20 p10 f j-ar o-50">
+    <div class="p5 rx10">
+      <svg viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="#f00">
+        <path d="M28 6 L6 6 8 30 24 30 26 6 4 6 M16 12 L16 24 M21 12 L20 24 M11 12 L12 24 M12 6 L13 2 19 2 20 6" />
+      </svg>
+    </div>
+  </div>
+
+  <script>
+    let wait;
+    editor.addEventListener( 'input', () => {
+      clearTimeout( wait );
+      wait = setTimeout( () => preview.innerHTML = marked.parse( editor.value ), 200 );
+    } );
+  </script>
+</body>
+
+</html>

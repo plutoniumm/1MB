@@ -30,8 +30,8 @@ svg {
     flex: 1;
     left: 0;
     right: 0;
-    top: 118px;
-    bottom: 33px;
+    top: 85px;
+    bottom: 0px;
 }
 
 .list {
@@ -101,6 +101,9 @@ svg {
     color: #fff;
     text-transform: capitalize;
     z-index: 5;
+    max-width: 400px;
+    word-wrap: break-word;
+    overflow: hidden;
 }
 
 .card:hover {
@@ -217,6 +220,7 @@ input[type=text] {
     bottom: 10px;
 }
 
+.card span ul,
 .card span p {
     margin: 0;
 }

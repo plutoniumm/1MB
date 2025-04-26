@@ -1,7 +1,7 @@
 <div>
-<img align="right" src="./assets/logo.svg" alt="Logo" width="32"/>
+<img align="right" src="./assets/logo.svg" alt="Logo" width="36"/>
 
-## halfMB
+# halfMB
 
 </div>
 

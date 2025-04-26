@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
@@ -17,9 +16,52 @@ var (
 	kanban   KanbanData
 )
 
+func editFile(c *gin.Context) {
+	file := c.Param("file")
+	text, err := c.GetRawData()
+	if err != nil {
+		c.Status(500)
+		fmt.Println("[Edit]", err)
+		return
+	}
+
+	// /edit/ -> /docs/
+	if strings.HasPrefix(file, "/edit/") {
+		file = strings.Replace(file, "/edit/", "/docs/", 1)
+	} else {
+		c.Status(404)
+		return
+	}
+
+	if _, err := os.Stat(file); errors.Is(err, os.ErrNotExist) {
+		err := os.MkdirAll(file[:strings.LastIndex(file, "/")], 0755)
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	err = os.WriteFile(file, []byte(text), 0600)
+	if err != nil {
+		panic(err)
+	}
+}
+
 func loadAsset(file string) ([]byte, error) {
 	if file == "/" {
 		file = "/assets/index.html"
+	} else if file == "/favicon.ico" {
+		file = "/assets/logo.svg"
+	} else if strings.HasPrefix(file, "/edit/raw") {
+		file = strings.Replace(file, "/edit/raw", "./docs", 1) + ".md"
+		fmt.Println("Matched", file)
+		content, err := os.ReadFile(file)
+		if err != nil {
+			return nil, fmt.Errorf("failed to read asset file: %w", err)
+		}
+
+		return content, nil
+	} else if strings.HasPrefix(file, "/edit/") {
+		file = "/assets/edit.html"
 	}
 
 	if strings.HasPrefix(file, "/assets/") {
@@ -31,18 +73,6 @@ func loadAsset(file string) ([]byte, error) {
 	}
 
 	return nil, fmt.Errorf("file not found")
-}
-
-func postKanban(c *gin.Context) {
-	var data KanbanData
-	err := c.BindJSON(&data)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "bad request"})
-		return
-	}
-	kanban = data
-	saveKanban()
-	c.JSON(http.StatusOK, &data)
 }
 
 func handleGet(c *gin.Context) {
@@ -93,23 +123,6 @@ func scamAuth() gin.HandlerFunc {
 	}
 }
 
-func saveKanban() {
-	bytes, _ := json.Marshal(&kanban)
-	err := os.WriteFile(jsonFile, bytes, 0600)
-	if err != nil {
-		panic(err)
-	}
-}
-
-func loadKanban() {
-	content, err := os.ReadFile(jsonFile)
-	if err != nil {
-		panic(err)
-	} else if err = json.Unmarshal(content, &kanban); err != nil {
-		panic(err)
-	}
-}
-
 // nohup go run *.go > server.log 2>&1 &
 func main() {
 	var webRoot, bindAddr string
@@ -140,6 +153,13 @@ func main() {
 		}
 		saveKanban()
 	}
+	if _, err := os.Stat("docs"); errors.Is(err, os.ErrNotExist) {
+		err := os.Mkdir("docs", 0755)
+		if err != nil {
+			panic(err)
+		}
+	}
+
 	gin.SetMode(gin.ReleaseMode)
 
 	loadKanban()
@@ -149,6 +169,7 @@ func main() {
 	router.Use(scamAuth())
 
 	router.GET("/*file", handleGet)
+	router.POST("/edit/*file", editFile)
 	router.POST("/kanban", postKanban)
 
 	fmt.Printf("Server listening at http://%s\n", bindAddr)

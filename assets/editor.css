@@ -1,0 +1,39 @@
+html,
+body,
+lt-split {
+  height: 100vh;
+}
+
+.prev,
+textarea {
+  line-height: 1.5;
+  font-family: Helvetica;
+  font-size: 18px !important;
+  height: calc(100% - 40px);
+  width: calc(100% - 40px);
+}
+
+*::-webkit-scrollbar {
+  display: none !important;
+}
+
+#controls {
+  transform: translateX(-50%);
+  bottom: 10px;
+  left: 50%;
+  background: #ccc;
+  min-width: 80px;
+  transition: opacity 0.1s ease-in-out;
+}
+
+#controls:hover {
+  opacity: 1;
+}
+
+#controls div {
+  transition: background 0.1s ease-in-out;
+}
+
+#controls div:hover {
+  background: #aaa;
+}

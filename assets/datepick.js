@@ -24,6 +24,7 @@ class Datepicker extends HTMLElement {
       z-index: 1000;
       color: #e0e0e0;
       transition: all 0.1s ease;
+      transform: translate(-80px, -20px) scale(0.75);
     }
 
     #calHeader {

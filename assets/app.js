@@ -31,6 +31,8 @@ function live ( eventType, selector, callback ) {
 var ModalDialog = function ( title, body, extra, ok_callback, ok_data, cancel_callback, cancel_data ) {
     $id( 'modal-dialog-title-id' ).innerHTML = title;
     $id( 'modal-dialog-body-id' ).innerHTML = body;
+    /**/$id( 'modal-dialog-body-id' ).rows = body.split( '\n' ).length + 2;
+
     $id( 'modal-dialog-extra-id' ).innerHTML = '';
     if ( extra ) {
         $id( 'modal-dialog-extra-id' ).appendChild( extra );
